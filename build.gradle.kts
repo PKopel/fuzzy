@@ -39,3 +39,6 @@ application {
     // Define the main class for the application.
     mainClassName = "fuzzy.AppKt"
 }
+
+val run: JavaExec by tasks
+run.standardInput = System.`in`
