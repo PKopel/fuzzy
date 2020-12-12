@@ -51,7 +51,7 @@ FUNCTION_BLOCK
                 THEN max_engine_power IS low;
         RULE 1: IF (light IS poor OR time_of_day IS night) AND weight IS high
                 THEN max_engine_power IS medium;
-        RULE 2: IF (light IS medium OR time_of_day IS morning OR time_of_day IS evening) AND (weight IS low OR weight IS medium)
+        RULE 2: IF (light IS medium OR (time_of_day IS morning OR time_of_day IS evening)) AND (weight IS low OR weight IS medium)
                 THEN max_engine_power IS medium;
         RULE 3: IF (light IS medium OR time_of_day IS morning OR time_of_day IS evening) AND weight IS high
                 THEN max_engine_power IS high;
