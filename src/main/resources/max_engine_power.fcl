@@ -1,0 +1,78 @@
+FUNCTION_BLOCK
+    VAR_INPUT
+        light : REAL;
+        time_of_day : REAL;
+        weight: REAL;
+        humidity: REAL;
+    END_VAR
+    VAR_OUTPUT
+        max_engine_power : REAL;
+    END_VAR
+
+    FUZZIFY light
+        TERM poor := (0, 1) (30, 1) (35, 0.50) (40, 0);
+        TERM medium := (30, 0) (35, 0.50) (40, 1) (50, 1) (55, 0.50) (60, 0);
+        TERM good := (50, 0) (55, 0.50) (60, 1) (100, 1);
+    END_FUZZIFY
+
+    FUZZIFY time_of_day
+        TERM morning := (4, 0) (5, 0.50) (6, 1) (7, 1) (9, 0.50) (11, 0);
+        TERM noon := (7, 0) (9, 0.50) (11, 1) (14, 1) (16, 0.50) (18, 0);
+        TERM evening := (14, 0) (16, 0.50) (18, 1) (20, 1) (21, 0.50) (22, 0);
+        TERM night := (0,1) (4, 1) (5, 0.50) (6, 0) (20, 0) (21, 0.50) (22, 1) (23, 1);
+    END_FUZZIFY
+
+
+    FUZZIFY weight
+        TERM low := (0, 1) (45, 1) (60, 0);
+        TERM medium := (45, 0) (60, 1) (90, 1) (105, 0);
+        TERM high := (90, 0) (105, 1) (150, 1);
+    END_FUZZIFY
+
+    FUZZIFY humidity
+        TERM low := (0, 1) (20, 1) (40, 0);
+        TERM medium := (20, 0) (40, 1) (60, 1)  (80, 0);
+        TERM high := (60, 0) (80, 1) (100, 1);
+    END_FUZZIFY
+
+    DEFUZZIFY max_engine_power
+        TERM low := (0, 1) (10, 1) (20, 0) (50, 0);
+        TERM medium := (0,0) (10, 0) (20, 1) (25,1) (35, 0) (50, 0);
+        TERM high := (0, 0) (25, 0) (35, 1) (50, 1);
+        METHOD : COG;
+        DEFAULT := NC;
+    END_DEFUZZIFY
+
+    RULEBLOCK first
+        AND: MIN;
+        ACT: MIN;
+
+        RULE 0: IF (light IS poor OR time_of_day IS night) AND (weight IS low OR weight IS medium)
+                THEN max_engine_power IS low;
+        RULE 1: IF (light IS poor OR time_of_day IS night) AND weight IS high
+                THEN max_engine_power IS medium;
+        RULE 2: IF (light IS medium OR time_of_day IS morning OR time_of_day IS evening) AND (weight IS low OR weight IS medium)
+                THEN max_engine_power IS medium;
+        RULE 3: IF (light IS medium OR time_of_day IS morning OR time_of_day IS evening) AND weight IS high
+                THEN max_engine_power IS high;
+        RULE 4: IF light IS good AND weight IS low
+                THEN max_engine_power IS medium;
+        RULE 5: IF light IS good AND (weight IS medium OR weight IS high)
+                THEN max_engine_power IS high;
+
+        RULE 6: IF humidity IS low AND light IS good
+                THEN max_engine_power IS high;
+        RULE 7: IF humidity IS low AND (light IS medium OR light IS poor)
+                THEN max_engine_power IS medium;
+        RULE 8: IF humidity IS medium AND light IS good
+                THEN max_engine_power IS high;
+        RULE 9: IF humidity IS medium AND light IS medium
+                THEN max_engine_power IS medium;
+        RULE 10: IF humidity IS medium AND light IS poor
+                 THEN max_engine_power IS low;
+        RULE 11: IF humidity IS high AND light IS good
+                 THEN max_engine_power IS medium;
+        RULE 12: IF humidity IS high AND (light IS medium OR light IS poor)
+                 THEN max_engine_power IS low;
+    END_RULEBLOCK
+END_FUNCTION_BLOCK
