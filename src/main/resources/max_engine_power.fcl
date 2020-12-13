@@ -1,4 +1,4 @@
-FUNCTION_BLOCK
+FUNCTION_BLOCK engine_power
     VAR_INPUT
         light : REAL;
         time_of_day : REAL;

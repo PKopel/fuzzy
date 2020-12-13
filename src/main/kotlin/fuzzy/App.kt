@@ -1,17 +1,17 @@
 package fuzzy
 
 import net.sourceforge.jFuzzyLogic.FIS
+import net.sourceforge.jFuzzyLogic.FunctionBlock
 import net.sourceforge.jFuzzyLogic.plot.JFuzzyChart
 import net.sourceforge.jFuzzyLogic.rule.Variable
 import kotlin.system.exitProcess
 
 fun main(args: Array<String>) {
     val fileName = "src/main/resources/max_engine_power.fcl"
-    val fis: FIS = FIS.load(fileName, false).apply {
-        setVariable("max_engine_power", 25.0)
-    }.onEach { functionBlock ->
-        JFuzzyChart.get().chart(functionBlock)
-    }
+    val fis: FIS = FIS.load(fileName)
+    val functionBlock: FunctionBlock = fis.getFunctionBlock("engine_power")
+
+    JFuzzyChart.get().chart(functionBlock)
 
     print("Enter light level (as real number between 0 and 100, default 0): ")
     val lightLevel: Double = readLine()?.toDouble() ?: 0.0
@@ -23,15 +23,18 @@ fun main(args: Array<String>) {
     val timeOfDay: Double = readLine()?.toDouble() ?: 0.0
 
     fis.apply {
-        setVariable("light", lightLevel)
-        setVariable("time_of_day", timeOfDay)
-        setVariable("weight", weight)
-        setVariable("humidity", humidity)
+        setVariable(functionBlock.name, "max_engine_power", 25.0)
+        setVariable(functionBlock.name,"light", lightLevel)
+        setVariable(functionBlock.name,"time_of_day", timeOfDay)
+        setVariable(functionBlock.name,"weight", weight)
+        setVariable(functionBlock.name,"humidity", humidity)
         evaluate()
-    }.onEach { functionBlock ->
-        val volumeChange: Variable = functionBlock.getVariable("max_engine_power")
-        JFuzzyChart.get().chart(volumeChange, volumeChange.defuzzifier, true)
     }
+
+    val volumeChange: Variable = functionBlock.getVariable("max_engine_power")
+    println("Max engine power: ${volumeChange.defuzzify()}")
+    JFuzzyChart.get().chart(volumeChange, volumeChange.defuzzifier, true)
+
 
     print("Press enter to close")
     readLine()
