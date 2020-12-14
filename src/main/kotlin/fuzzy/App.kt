@@ -26,12 +26,12 @@ fun main(args: Array<String>) {
     if (input?.contains('y', true) == true)
         JFuzzyChart.get().chart(functionBlock)
 
-    print("Enter light level (in %, as a real number between 0 and 100, default 80): ")
+    print("Enter light intensity (in lx, as a real number between 20 and 5000, default 500): ")
     input = readLine()
-    val lightLevel: Double = if (input?.isNotEmpty() == true) input.toDouble() else 80.0
-    print("Enter weight (in kg, as a real number between 0 and 150, default 70): ")
+    val lightIntensity: Double = if (input?.isNotEmpty() == true) input.toDouble() else 80.0
+    print("Enter driver weight (in kg, as a real number between 0 and 150, default 70): ")
     input = readLine()
-    val weight: Double = if (input?.isNotEmpty() == true) input.toDouble() else 70.0
+    val driverWeight: Double = if (input?.isNotEmpty() == true) input.toDouble() else 70.0
     print("Enter humidity (in %, as a real number between 0 and 100, default 30): ")
     input = readLine()
     val humidity: Double = if (input?.isNotEmpty() == true) input.toDouble() else 30.0
@@ -41,9 +41,9 @@ fun main(args: Array<String>) {
 
     fis.apply {
         setVariable(functionBlock.name, "max_engine_power", 25.0)
-        setVariable(functionBlock.name, "light", lightLevel)
+        setVariable(functionBlock.name, "light_intensity", lightIntensity)
         setVariable(functionBlock.name, "time_of_day", timeOfDay)
-        setVariable(functionBlock.name, "weight", weight)
+        setVariable(functionBlock.name, "driver_weight", driverWeight)
         setVariable(functionBlock.name, "humidity", humidity)
         evaluate()
     }
@@ -52,7 +52,7 @@ fun main(args: Array<String>) {
 
     val maxEnginePower = (maxEnginePowerPercentage.defuzzify() + 30) / 100 * scooterEnginePower
     println("Max engine power : $maxEnginePower W")
-    println("Max speed: ${powerToSpeed(maxEnginePower, weight)} m/s")
+    println("Max speed: ${powerToSpeed(maxEnginePower, driverWeight)} m/s")
 
     print("Show chart? [y/n]:")
     input = readLine()
