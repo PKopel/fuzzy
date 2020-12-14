@@ -5,8 +5,11 @@ import net.sourceforge.jFuzzyLogic.FunctionBlock
 import net.sourceforge.jFuzzyLogic.plot.JFuzzyChart
 import net.sourceforge.jFuzzyLogic.rule.Variable
 import kotlin.system.exitProcess
+import javax.swing.*
+import fuzzy.view.SimView
+import org.jfree.chart.JFreeChart
 
-fun main(args: Array<String>) {
+fun cli(){
     val fileName = "src/main/resources/max_engine_power.fcl"
     val fis: FIS = FIS.load(fileName)
     val functionBlock: FunctionBlock = fis.getFunctionBlock("engine_power")
@@ -39,5 +42,14 @@ fun main(args: Array<String>) {
     print("Press enter to close")
     readLine()
     exitProcess(0)
+}
+
+fun main(args: Array<String>) {
+    val fileName = "src/main/resources/max_engine_power.fcl"
+    val fis: FIS = FIS.load(fileName)
+    val simView = SimView(fis = fis)
+    simView.defaultCloseOperation = JFrame.EXIT_ON_CLOSE
+    simView.setSize(1000,400)
+    simView.isVisible = true
 }
 
