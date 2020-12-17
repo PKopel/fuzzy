@@ -53,44 +53,44 @@ FUNCTION_BLOCK engine_power
         RULE 1: IF (light_intensity IS dim OR time_of_day IS night)
                     AND driver_weight IS medium
                 THEN max_engine_power IS low;
-        RULE 1: IF (light_intensity IS dim OR time_of_day IS night)
+        RULE 2: IF (light_intensity IS dim OR time_of_day IS night)
                     AND driver_weight IS heavy
                 THEN max_engine_power IS medium;
-        RULE 2: IF (light_intensity IS medium OR (time_of_day IS morning OR time_of_day IS evening))
+        RULE 3: IF (light_intensity IS medium OR (time_of_day IS morning OR time_of_day IS evening))
                     AND driver_weight IS light
                 THEN max_engine_power IS very_low;
-        RULE 3: IF (light_intensity IS medium OR (time_of_day IS morning OR time_of_day IS evening))
+        RULE 4: IF (light_intensity IS medium OR (time_of_day IS morning OR time_of_day IS evening))
                     AND driver_weight IS medium
                 THEN max_engine_power IS medium;
-        RULE 4: IF (light_intensity IS medium OR time_of_day IS morning OR time_of_day IS evening)
+        RULE 5: IF (light_intensity IS medium OR time_of_day IS morning OR time_of_day IS evening)
                     AND driver_weight IS heavy
                 THEN max_engine_power IS high;
-        RULE 5: IF (light_intensity IS bright OR time_of_day IS noon)
+        RULE 6: IF (light_intensity IS bright OR time_of_day IS noon)
                     AND driver_weight IS light
                 THEN max_engine_power IS low;
-        RULE 6: IF (light_intensity IS bright OR time_of_day Is noon)
+        RULE 7: IF (light_intensity IS bright OR time_of_day Is noon)
                     AND (driver_weight IS medium OR driver_weight IS heavy)
                 THEN max_engine_power IS high;
 
-        RULE 7: IF humidity IS dry
+        RULE 8: IF humidity IS dry
                     AND light_intensity IS bright
                 THEN max_engine_power IS high;
-        RULE 8: IF humidity IS dry
+        RULE 9: IF humidity IS dry
                     AND (light_intensity IS medium OR light_intensity IS dim)
                 THEN max_engine_power IS medium;
-        RULE 9: IF humidity IS medium
+        RULE 10: IF humidity IS medium
                     AND light_intensity IS bright
                 THEN max_engine_power IS high;
-        RULE 10: IF humidity IS medium
+        RULE 11: IF humidity IS medium
                     AND light_intensity IS medium
                 THEN max_engine_power IS medium;
-        RULE 11: IF humidity IS medium
+        RULE 12: IF humidity IS medium
                     AND light_intensity IS dim
                  THEN max_engine_power IS low;
-        RULE 12: IF humidity IS wet
+        RULE 13: IF humidity IS wet
                     AND light_intensity IS bright
                  THEN max_engine_power IS medium;
-        RULE 13: IF humidity IS wet
+        RULE 14: IF humidity IS wet
                     AND (light_intensity IS medium OR light_intensity IS bright)
                  THEN max_engine_power IS low;
     END_RULEBLOCK
