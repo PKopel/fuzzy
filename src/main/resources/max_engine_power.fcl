@@ -35,9 +35,9 @@ FUNCTION_BLOCK engine_power
     END_FUZZIFY
 
     DEFUZZIFY max_engine_power
-        TERM low := (0, 1) (20, 1) (30, 0) (70, 0);
-        TERM medium := (0,0) (20, 0) (30, 1) (45,1) (55, 0) (70, 0);
-        TERM high := (0, 0) (45, 0) (55, 1) (70, 1);
+        TERM low := (30, 1) (50, 1) (60, 0) (100, 0);
+        TERM medium := (0,0) (50, 0) (60, 1) (75,1) (85, 0) (100, 0);
+        TERM high := (0, 0) (75, 0) (85, 1) (100, 1);
         METHOD : COG;
         DEFAULT := NC;
     END_DEFUZZIFY
@@ -58,10 +58,10 @@ FUNCTION_BLOCK engine_power
         RULE 3: IF (light_intensity IS medium OR time_of_day IS morning OR time_of_day IS evening)
                     AND driver_weight IS heavy
                 THEN max_engine_power IS high;
-        RULE 4: IF light_intensity IS bright
+        RULE 4: IF (light_intensity IS bright OR time_of_day IS noon)
                     AND driver_weight IS light
                 THEN max_engine_power IS medium;
-        RULE 5: IF light_intensity IS bright
+        RULE 5: IF (light_intensity IS bright OR time_of_day Is noon)
                     AND (driver_weight IS medium OR driver_weight IS heavy)
                 THEN max_engine_power IS high;
 

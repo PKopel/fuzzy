@@ -50,7 +50,7 @@ fun main(args: Array<String>) {
 
     val maxEnginePowerPercentage: Variable = functionBlock.getVariable("max_engine_power")
 
-    val maxEnginePower = (maxEnginePowerPercentage.defuzzify() + 30) / 100 * scooterEnginePower
+    val maxEnginePower = (maxEnginePowerPercentage.defuzzify()) / 100 * scooterEnginePower
     println("Max engine power : $maxEnginePower W")
     println("Max speed: ${powerToSpeed(maxEnginePower, driverWeight)} m/s")
 
