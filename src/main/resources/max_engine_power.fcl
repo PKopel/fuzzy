@@ -23,8 +23,8 @@ FUNCTION_BLOCK engine_power
     END_FUZZIFY
 
     FUZZIFY driver_weight
-        TERM light := (0, 1) (45, 1) (60, 0);
-        TERM medium := (45, 0) (60, 1) (90, 1) (105, 0);
+        TERM light := (0, 1) (60, 1) (70,0);
+        TERM medium := (60, 0) (70,1) (90, 1) (105, 0);
         TERM heavy := (90, 0) (105, 1) (150, 1);
     END_FUZZIFY
 
@@ -35,7 +35,8 @@ FUNCTION_BLOCK engine_power
     END_FUZZIFY
 
     DEFUZZIFY max_engine_power
-        TERM low := (30, 1) (50, 1) (60, 0) (100, 0);
+        TERM very_low := (0,1) (20,1) (30,0) (100,0);
+        TERM low := (0,0) (20,0) (30, 1) (50, 1) (60, 0) (100, 0);
         TERM medium := (0,0) (50, 0) (60, 1) (75,1) (85, 0) (100, 0);
         TERM high := (0, 0) (75, 0) (85, 1) (100, 1);
         METHOD : COG;
@@ -47,43 +48,49 @@ FUNCTION_BLOCK engine_power
         ACT: MIN;
 
         RULE 0: IF (light_intensity IS dim OR time_of_day IS night)
-                    AND (driver_weight IS light OR driver_weight IS medium)
+                    AND driver_weight IS light
+                THEN max_engine_power IS very_low;
+        RULE 1: IF (light_intensity IS dim OR time_of_day IS night)
+                    AND driver_weight IS medium
                 THEN max_engine_power IS low;
         RULE 1: IF (light_intensity IS dim OR time_of_day IS night)
                     AND driver_weight IS heavy
                 THEN max_engine_power IS medium;
         RULE 2: IF (light_intensity IS medium OR (time_of_day IS morning OR time_of_day IS evening))
-                    AND (driver_weight IS light OR driver_weight IS medium)
+                    AND driver_weight IS light
+                THEN max_engine_power IS very_low;
+        RULE 3: IF (light_intensity IS medium OR (time_of_day IS morning OR time_of_day IS evening))
+                    AND driver_weight IS medium
                 THEN max_engine_power IS medium;
-        RULE 3: IF (light_intensity IS medium OR time_of_day IS morning OR time_of_day IS evening)
+        RULE 4: IF (light_intensity IS medium OR time_of_day IS morning OR time_of_day IS evening)
                     AND driver_weight IS heavy
                 THEN max_engine_power IS high;
-        RULE 4: IF (light_intensity IS bright OR time_of_day IS noon)
+        RULE 5: IF (light_intensity IS bright OR time_of_day IS noon)
                     AND driver_weight IS light
-                THEN max_engine_power IS medium;
-        RULE 5: IF (light_intensity IS bright OR time_of_day Is noon)
+                THEN max_engine_power IS low;
+        RULE 6: IF (light_intensity IS bright OR time_of_day Is noon)
                     AND (driver_weight IS medium OR driver_weight IS heavy)
                 THEN max_engine_power IS high;
 
-        RULE 6: IF humidity IS dry
+        RULE 7: IF humidity IS dry
                     AND light_intensity IS bright
                 THEN max_engine_power IS high;
-        RULE 7: IF humidity IS dry
+        RULE 8: IF humidity IS dry
                     AND (light_intensity IS medium OR light_intensity IS dim)
                 THEN max_engine_power IS medium;
-        RULE 8: IF humidity IS medium
+        RULE 9: IF humidity IS medium
                     AND light_intensity IS bright
                 THEN max_engine_power IS high;
-        RULE 9: IF humidity IS medium
+        RULE 10: IF humidity IS medium
                     AND light_intensity IS medium
                 THEN max_engine_power IS medium;
-        RULE 10: IF humidity IS medium
+        RULE 11: IF humidity IS medium
                     AND light_intensity IS dim
                  THEN max_engine_power IS low;
-        RULE 11: IF humidity IS wet
+        RULE 12: IF humidity IS wet
                     AND light_intensity IS bright
                  THEN max_engine_power IS medium;
-        RULE 12: IF humidity IS wet
+        RULE 13: IF humidity IS wet
                     AND (light_intensity IS medium OR light_intensity IS bright)
                  THEN max_engine_power IS low;
     END_RULEBLOCK
